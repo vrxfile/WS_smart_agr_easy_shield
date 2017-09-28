@@ -38,6 +38,9 @@ DHT dht1(DHTPIN, DHT11);
 // Выход на синий светодиод
 #define BLUE_LED 13
 
+// Выход на пьезодинамик
+#define BUZZER 5
+
 void setup() {
   // Инициализация UART
   Serial.begin(115200);
@@ -66,6 +69,13 @@ void setup() {
 }
 
 void loop() {
+  // Считывание всех датчиков
+  readSensorData();
+  delay(1000);
+
+  // Мигание светодиодами и включение/выключение реле
+  controlDevices();
+  delay(1000);
 }
 
 // Считывание датчиков и вывод показаний в монитор порта
@@ -96,5 +106,39 @@ void readSensorData() {
   float resistance = analogRead(RESISTOR) / 1023.0 * 10.0;    // Считывание показаний переменного резистора
   Serial.print("Resistance = ");
   Serial.println(resistance);
+
+  Serial.println();
+  Serial.println();
+}
+
+// Мигание светодиодами и включение/выключение реле
+void controlDevices()
+{
+  digitalWrite(R_LED, HIGH); delay(500);
+  powerOffDevices(); delay(500);
+  digitalWrite(G_LED, HIGH); delay(500);
+  powerOffDevices(); delay(500);
+  digitalWrite(B_LED, HIGH); delay(500);
+  powerOffDevices(); delay(500);
+  digitalWrite(RED_LED, HIGH); delay(500);
+  powerOffDevices(); delay(500);
+  digitalWrite(BLUE_LED, HIGH); delay(500);
+  powerOffDevices(); delay(500);
+  tone(BUZZER, 440, 500); delay(500);
+  powerOffDevices(); delay(500);
+  digitalWrite(PUMP, HIGH); delay(500);
+  powerOffDevices(); delay(500);
+}
+
+// Выключение всех светодиодов и реле
+void powerOffDevices()
+{
+  digitalWrite(R_LED, LOW);
+  digitalWrite(G_LED, LOW);
+  digitalWrite(B_LED, LOW);
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(BLUE_LED, LOW);
+  digitalWrite(PUMP, LOW);
+  noTone(BUZZER);
 }
 
